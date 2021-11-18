@@ -337,7 +337,29 @@ st.plotly_chart(fig5)
 
 #create keys for the 8 states with highest personal income growth out of the bottom 20 states in personal income
 states_filter_2_keys = list(personal_income_growth_2017to2021Q2_lower_end.iloc[-8:].index)
+states_filter_keys_code = ['MS', 'KY','MT', 'IN', 'GA', 'LA','NM','UT']
 
+
+fig6 = go.Figure(data=go.Choropleth(
+    locations=states_filter_keys_code, # Spatial coordinates
+    z = personal_income_growth_2017to2021Q2["DataValue"][states_filter_2_keys].sort_values(), # Data to be color-coded
+    locationmode = 'USA-states', # set of locations match entries in `locations`
+    colorscale = 'viridis' ,
+    colorbar_title = "Percentage",
+    autocolorscale=False,
+    #text=us_states_df['text'], # hover text
+    marker_line_color='white'# line markers between states
+    
+ ))
+
+fig6.update_layout(
+        geo_scope='usa', # limite map scope to USA,
+        title_text = " Map of US with target states and their percent growth from 2017Q1 - 2021Q2",
+         height = 800,
+         margin={"r":0,"t":0,"l":0,"b":0}
+         )
+
+st.plotly_chart(fig6)
 #review keys
 #st.write(states_filter_2_keys)
 
@@ -375,20 +397,21 @@ gdp_state_5year = gdp_country_state[[
     'Description',
     '2016','2017','2018','2019','2020']]
 
+# Replacing NA's to 0
+gdp_state_5year = gdp_state_5year.replace(["(NA)", "(L)"], 0)
+gdp_state_5year=gdp_state_5year.fillna(0)
+
+#changing strings to floats
+gdp_state_5year['2016'] = gdp_state_5year['2016'].astype('float')
+gdp_state_5year['2017'] = gdp_state_5year['2017'].astype('float')
+gdp_state_5year['2019'] = gdp_state_5year['2019'].astype('float')
+gdp_state_5year['2020'] = gdp_state_5year['2020'].astype('float')
 #grouped by Description to pick out All industry total
 gdp_state_5year_filter = gdp_state_5year.groupby('Description')
 
 gdp_all_industry_df = gdp_state_5year_filter.get_group('All industry total')
 
 gdp_all_industry_df = gdp_all_industry_df.set_index(['GeoName','Description'])
-#st.write(gdp_all_industry_df.head())
-
-
-#changing strings to floats
-gdp_all_industry_df['2016'] = gdp_all_industry_df['2016'].astype('float')
-gdp_all_industry_df['2017'] = gdp_all_industry_df['2017'].astype('float')
-gdp_all_industry_df['2019'] = gdp_all_industry_df['2019'].astype('float')
-gdp_all_industry_df['2020'] = gdp_all_industry_df['2020'].astype('float')
 
 # calculate the per capita amount. multiply by a million, the units the original data was delivered in.
 gdp_capita_industry = gdp_all_industry_df / population_by_state * 1000000
@@ -417,7 +440,7 @@ industry_growth_rank = ((unstacked_gdp_capita_industry["Value"].loc["2020"]/unst
 # renamed the Geoname column to the industry label so it can be used to display on the graphs
 gdp_capita_industry=gdp_capita_industry.rename(columns={'GeoName': industry_label})
 
-st.header("GDP Per Capita for all industry for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for all industry for the target states - 2016 to 2020")
 industry_plot = px.bar(gdp_capita_industry, 
                         x='Date',
                         y='Value',
@@ -434,7 +457,9 @@ st.plotly_chart(industry_plot)
 #plot the states by their percent growth in this industry group for the last five years, in increasing order
 
 industry_plot_2 = px.bar(industry_growth_rank,
-                          labels = { 'GeoName': 'State', 'value': f"% growth of {industry_label}"}
+                          labels = { 'GeoName': 'State', 'value': f"% growth of {industry_label}"},
+                          color_discrete_sequence = ['red']*len(industry_growth_rank),
+                          width = 1200
                        )
 
 industry_plot_2.update_layout(title_text = f"Percent Growth for last five years for {industry_label}",
@@ -447,13 +472,6 @@ st.plotly_chart(industry_plot_2)
 gdp_agriculture_df = gdp_state_5year_filter.get_group("  Agriculture, forestry, fishing and hunting")
 
 gdp_agriculture_df = gdp_agriculture_df.set_index(['GeoName','Description'])
-# st.write(gdp_agriculture_df.head())
-
-gdp_agriculture_df['2016'] = gdp_agriculture_df['2016'].astype('float')
-gdp_agriculture_df['2017'] = gdp_agriculture_df['2017'].astype('float')
-gdp_agriculture_df['2019'] = gdp_agriculture_df['2019'].astype('float')
-gdp_agriculture_df['2020'] = gdp_agriculture_df['2020'].astype('float')
-
 
 gdp_capita_agriculture = gdp_agriculture_df / population_by_state
 gdp_capita_agriculture = gdp_capita_agriculture.reset_index()
@@ -463,7 +481,7 @@ gdp_capita_agriculture = gdp_capita_agriculture.melt(['GeoName','Description'], 
 
 # st.write(gdp_capita_agriculture.tail())
 
-st.header("GDP Per Capita for Agriculture for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Agriculture for the target states - 2016 to 2020")
 # #visualizing states gdp per capita Agriculture
 agriculture_plot = px.bar(gdp_capita_agriculture, 
                         x='Date',
@@ -477,18 +495,29 @@ agriculture_plot = px.bar(gdp_capita_agriculture,
 agriculture_plot.update_layout()
 st.plotly_chart(agriculture_plot)
 
+# drop Description column and unstack
+unstacked_gdp_capita_agriculture = gdp_capita_agriculture.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+
+# find percent growths
+agriculture_growth_rank = ((unstacked_gdp_capita_agriculture["Value"].loc["2020"]/unstacked_gdp_capita_agriculture["Value"].loc["2016"] - 1) * 100).sort_values()
+
+agriculture_plot_2 = px.bar(agriculture_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of Agriculture"},
+                          color_discrete_sequence = ['red']*len(agriculture_growth_rank),
+                          width = 1200
+                       )
+
+agriculture_plot_2.update_layout(title_text = f"Percent Growth for last five years for Agriculture",
+                                showlegend = False)
+
+st.plotly_chart(agriculture_plot_2)
+
 
 #filtering out Healthcare df
 gdp_healthcare_df = gdp_state_5year_filter.get_group("   Health care and social assistance")
 
 gdp_healthcare_df = gdp_healthcare_df.set_index(['GeoName','Description'])
-
-#st.write(gdp_healthcare_df.tail())
-
-gdp_healthcare_df['2016'] = gdp_healthcare_df['2016'].astype('float')
-gdp_healthcare_df['2017'] = gdp_healthcare_df['2017'].astype('float')
-gdp_healthcare_df['2019'] = gdp_healthcare_df['2019'].astype('float')
-gdp_healthcare_df['2020'] = gdp_healthcare_df['2020'].astype('float')
 
 gdp_capita_healthcare = gdp_healthcare_df / population_by_state
 gdp_capita_healthcare = gdp_capita_healthcare.reset_index()
@@ -497,7 +526,7 @@ gdp_capita_healthcare = gdp_capita_healthcare.reset_index()
 gdp_capita_healthcare = gdp_capita_healthcare.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 #st.write(gdp_capita_healthcare.tail())
-st.header("GDP Per Capita for Healthcare for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Healthcare for the target states - 2016 to 2020")
 healthcare_plot = px.bar(gdp_capita_healthcare, 
                         x='Date',
                         y='Value',
@@ -510,18 +539,28 @@ healthcare_plot = px.bar(gdp_capita_healthcare,
 healthcare_plot.update_layout()
 st.plotly_chart(healthcare_plot)
 
+# drop Description column and unstack
+unstacked_gdp_capita_healthcare = gdp_capita_healthcare.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+
+# find percent growths
+healthcare_growth_rank = ((unstacked_gdp_capita_healthcare["Value"].loc["2020"]/unstacked_gdp_capita_healthcare["Value"].loc["2016"] - 1) * 100).sort_values()
+
+healthcare_plot_2 = px.bar(healthcare_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of Healthcare"},
+                          color_discrete_sequence = ['red']*len(healthcare_growth_rank),
+                          width = 1200
+                       )
+
+healthcare_plot_2.update_layout(title_text = f"Percent Growth for last five years for Healthcare",
+                                showlegend = False)
+
+st.plotly_chart(healthcare_plot_2)
+
 #filtering a df out for manufacturing
 gdp_manufacturing_df = gdp_state_5year_filter.get_group("  Manufacturing")
 
 gdp_manufacturing_df = gdp_manufacturing_df.set_index(['GeoName','Description'])
-
-#st.write(gdp_manufacturing_df.tail())
-
-#setting strings to floats
-gdp_manufacturing_df['2016'] = gdp_manufacturing_df['2016'].astype('float')
-gdp_manufacturing_df['2017'] = gdp_manufacturing_df['2017'].astype('float')
-gdp_manufacturing_df['2019'] = gdp_manufacturing_df['2019'].astype('float')
-gdp_manufacturing_df['2020'] = gdp_manufacturing_df['2020'].astype('float')
 
 gdp_capita_manufacturing = gdp_manufacturing_df / population_by_state
 gdp_capita_manufacturing = gdp_capita_manufacturing.reset_index()
@@ -531,7 +570,7 @@ gdp_capita_manufacturing = gdp_capita_manufacturing.melt(['GeoName','Description
 
 #st.write(gdp_capita_manufacturing.tail())
 
-st.header("GDP Per Capita for Manufacturing for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Manufacturing for the target states - 2016 to 2020")
 manufacturing_plot = px.bar(gdp_capita_manufacturing, 
                         x='Date',
                         y='Value',
@@ -544,17 +583,27 @@ manufacturing_plot = px.bar(gdp_capita_manufacturing,
 manufacturing_plot.update_layout()
 st.plotly_chart(manufacturing_plot)
 
+# drop Description column and unstack
+unstacked_gdp_capita_manufacturing = gdp_capita_manufacturing.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+
+# find percent growths
+manufacturing_growth_rank = ((unstacked_gdp_capita_manufacturing["Value"].loc["2020"]/unstacked_gdp_capita_manufacturing["Value"].loc["2016"] - 1) * 100).sort_values()
+
+manufacturing_plot_2 = px.bar(manufacturing_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of manufacturing"},
+                          color_discrete_sequence = ['red']*len(manufacturing_growth_rank),
+                          width = 1200
+                       )
+
+manufacturing_plot_2.update_layout(title_text = f"Percent Growth for last five years for manufacturing",
+                                showlegend = False)
+
+st.plotly_chart(manufacturing_plot_2)
 #filtering df for private gdp by state
 gdp_private_df = gdp_state_5year_filter.get_group(' Private industries')
 
 gdp_private_df = gdp_private_df.set_index(['GeoName','Description'])
-
-# st.write(gdp_private_df.tail())
-
-gdp_private_df['2016'] = gdp_private_df['2016'].astype('float')
-gdp_private_df['2017'] = gdp_private_df['2017'].astype('float')
-gdp_private_df['2019'] = gdp_private_df['2019'].astype('float')
-gdp_private_df['2020'] = gdp_private_df['2020'].astype('float')
 
 gdp_capita_private = gdp_private_df / population_by_state
 
@@ -564,7 +613,7 @@ gdp_capita_private = gdp_capita_private.reset_index()
 gdp_capita_private = gdp_capita_private.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 # st.write(gdp_capita_private.tail())
-st.header("GDP Per Capita for Private Sector for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Private Sector for the target states - 2016 to 2020")
 private_plot = px.bar(gdp_capita_private, 
                         x='Date',
                         y='Value',
@@ -576,18 +625,27 @@ private_plot = px.bar(gdp_capita_private,
                         labels = {'Date':"Fiscal Year", 'Value':'GDP per Capita'})
 private_plot.update_layout()
 st.plotly_chart(private_plot)
+# drop Description column and unstack
+unstacked_gdp_capita_private = gdp_capita_private.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
 
+
+# find percent growths
+private_growth_rank = ((unstacked_gdp_capita_private["Value"].loc["2020"]/unstacked_gdp_capita_private["Value"].loc["2016"] - 1) * 100).sort_values()
+
+private_plot_2 = px.bar(private_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of Private Sector"},
+                          color_discrete_sequence = ['red']*len(private_growth_rank),
+                          width = 1200
+                       )
+
+private_plot_2.update_layout(title_text = f"Percent Growth for last five years for Private Sector",
+                                showlegend = False)
+
+st.plotly_chart(private_plot_2)
 #filteting out df for Finance gdp by state
 gdp_finance_df = gdp_state_5year_filter.get_group('  Finance, insurance, real estate, rental, and leasing')
 
 gdp_finance_df = gdp_finance_df.set_index(['GeoName','Description'])
-
-#st.write(display(gdp_finance_df.tail()))
-
-gdp_finance_df['2016'] = gdp_finance_df['2016'].astype('float')
-gdp_finance_df['2017'] = gdp_finance_df['2017'].astype('float')
-gdp_finance_df['2019'] = gdp_finance_df['2019'].astype('float')
-gdp_finance_df['2020'] = gdp_finance_df['2020'].astype('float')
 
 gdp_capita_finance = gdp_finance_df / population_by_state
 gdp_capita_finance = gdp_capita_finance.reset_index()
@@ -596,7 +654,7 @@ gdp_capita_finance = gdp_capita_finance.reset_index()
 gdp_capita_finance = gdp_capita_finance.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 # st.write(gdp_capita_finance.tail())
-st.header("GDP Per Capita for Finance for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Finance for the target states - 2016 to 2020")
 finance_plot = px.bar(gdp_capita_finance, 
                         x='Date',
                         y='Value',
@@ -609,18 +667,27 @@ finance_plot = px.bar(gdp_capita_finance,
 finance_plot.update_layout()
 st.plotly_chart(finance_plot)
 
+# drop Description column and unstack
+unstacked_gdp_capita_finance = gdp_capita_finance.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+
+# find percent growths
+finance_growth_rank = ((unstacked_gdp_capita_finance["Value"].loc["2020"]/unstacked_gdp_capita_finance["Value"].loc["2016"] - 1) * 100).sort_values()
+
+finance_plot_2 = px.bar(finance_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of finance"},
+                          color_discrete_sequence = ['red']*len(finance_growth_rank),
+                          width = 1200
+                       )
+
+finance_plot_2.update_layout(title_text = f"Percent Growth for last five years for finance",
+                                showlegend = False)
+
+st.plotly_chart(finance_plot_2)
 #filtering df for transportation gdp by state
 gdp_transportation_df = gdp_state_5year_filter.get_group('  Transportation and warehousing')
 
 gdp_transportation_df = gdp_transportation_df.set_index(['GeoName','Description'])
-
-# st.write(gdp_transportation_df.tail())
-
-gdp_transportation_df['2016'] = gdp_transportation_df['2016'].astype('float')
-gdp_transportation_df['2017'] = gdp_transportation_df['2017'].astype('float')
-gdp_transportation_df['2019'] = gdp_transportation_df['2019'].astype('float')
-gdp_transportation_df['2020'] = gdp_transportation_df['2020'].astype('float')
-
 
 gdp_capita_transportation = gdp_transportation_df / population_by_state
 gdp_capita_transportation = gdp_capita_transportation.reset_index()
@@ -629,7 +696,7 @@ gdp_capita_transportation = gdp_capita_transportation.reset_index()
 gdp_capita_transportation = gdp_capita_transportation.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 # st.write(gdp_capita_transportation.tail())
 
-st.header("GDP Per Capita for Transportation for the filtered states - 2016 to 2020")
+st.header("GDP Per Capita for Transportation for the target states - 2016 to 2020")
 transportation_plot = px.bar(gdp_capita_transportation, 
                         x='Date',
                         y='Value',
@@ -642,12 +709,75 @@ transportation_plot = px.bar(gdp_capita_transportation,
 transportation_plot.update_layout()
 st.plotly_chart(transportation_plot)
 
+# drop Description column and unstack
+unstacked_gdp_capita_transportation = gdp_capita_transportation.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+
+# find percent growths
+transportation_growth_rank = ((unstacked_gdp_capita_transportation["Value"].loc["2020"]/unstacked_gdp_capita_transportation["Value"].loc["2016"] - 1) * 100).sort_values()
+
+transportation_plot_2 = px.bar(transportation_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of transportation"},
+                          color_discrete_sequence = ['red']*len(transportation_growth_rank),
+                          width = 1200
+                       )
+
+transportation_plot_2.update_layout(title_text = f"Percent Growth for last five years for transportation",
+                                showlegend = False)
+
+st.plotly_chart(transportation_plot_2)
+#st.write(industry_list)
+
+industry = st.selectbox("Choose a Industry to analyze:", gdp_country_state["Description"].drop_duplicates().sort_values())
+
+
+gdp_generic_df = gdp_state_5year_filter.get_group(industry)
+
+gdp_generic_df = gdp_generic_df.set_index(['GeoName','Description'])
+
+gdp_capita_generic = gdp_generic_df / population_by_state
+gdp_capita_generic = gdp_capita_generic.reset_index()
+
+#melting the df arounf GeoName and Description
+gdp_capita_generic = gdp_capita_generic.melt(['GeoName','Description'], var_name='Date', value_name='Value')
+
+# drop Description column and unstack
+unstacked_gdp_capita_generic = gdp_capita_generic.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
+
+st.write(unstacked_gdp_capita_generic["Value"].loc["2020"])
+# find percent growths. if the 2020 value is not available, do not include it and return a relevant title.
+if (unstacked_gdp_capita_generic["Value"].loc["2020"] == 0).sum() > 0:
+    generic_growth_rank = ((unstacked_gdp_capita_generic["Value"].loc["2019"]/unstacked_gdp_capita_generic["Value"].loc["2016"] - 1) * 100).sort_values()
+    text="2016 - 2019"
+else:
+    generic_growth_rank = ((unstacked_gdp_capita_generic["Value"].loc["2020"]/unstacked_gdp_capita_generic["Value"].loc["2016"] - 1) * 100).sort_values()
+    text="2016 - 2020"
+
+
+st.header(f"GDP Per Capita for {industry} for the target states - {text}")
+generic_plot = px.bar(gdp_capita_generic, 
+                        x='Date',
+                        y='Value',
+                        facet_col = "GeoName",
+                        facet_col_wrap = 4,
+                        facet_row_spacing = 0.1,
+                        width = 1200,
+                        height = 500,
+                        labels = {'Date':"Fiscal Year", 'Value':'GDP per Capita'})
+generic_plot.update_layout()
+st.plotly_chart(generic_plot)
 
 
 
+generic_plot_2 = px.bar(generic_growth_rank,
+                          labels = { 'GeoName': 'State', 'value': f"% growth of {industry}"},
+                          color_discrete_sequence = ['red']*len(generic_growth_rank),
+                          width = 1200
+                       )
 
+generic_plot_2.update_layout(title_text = f"Percent Growth for last five years for {industry}",
+                                showlegend = False)
 
-
-
+st.plotly_chart(generic_plot_2)
 
 
