@@ -25,37 +25,47 @@ st.set_page_config(
 )
 st.title("Identifying Emerging markets in the US")
 
-#load the API keys stored in .env file
-load_dotenv()
+@st.cache
 
-# https://apps.bea.gov/api/signup/index.cfm to signup for API key for Bureau of Economic Analysis
+def get_api_key():
+    #load the API keys stored in .env file
+    load_dotenv()
 
-# https://apps.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf for user guide
+    # https://apps.bea.gov/api/signup/index.cfm to signup for API key for Bureau of Economic Analysis
 
-#get BEA API key from .env file
-bea_api_key=os.getenv("BEA_API_KEY")
+    # https://apps.bea.gov/api/_pdf/bea_web_service_api_user_guide.pdf for user guide
 
-# set up query URL
-bea_url = "http://apps.bea.gov/api/data?UserID=" + bea_api_key + "&method=GETDATASETLIST&ResultFormat=JSON" 
+    #get BEA API key from .env file
+    bea_api_key=os.getenv("BEA_API_KEY")
+    return bea_api_key
 
-#send request to BEA
-bea_response = requests.get(bea_url).json()["BEAAPI"]["Results"]
+@st.cache
+def get_Data_List(bea_api_key):
+    # set up query URL
+    bea_url = "http://apps.bea.gov/api/data?UserID=" + bea_api_key + "&method=GETDATASETLIST&ResultFormat=JSON" 
 
-# #review response
-# bea_response
+    #send request to BEA
+    bea_response = requests.get(bea_url).json()["BEAAPI"]["Results"]
+    return bea_response
 
-# this query will get the data for all states for the last five years for personal income per capita.
+@st.cache
+def get_Data(bea_api_key):
+    # this query will get the data for all states for the last five years for personal income per capita.
+    bea_states_personal_income_linecode_query_url = "http://apps.bea.gov/api/data?UserID=" + bea_api_key + "&method=GetData&datasetname=Regional&TableName=SQINC1&GeoFIPS=STATE&LineCode=3&Year=LAST5&ResultFormat=JSON"
 
-bea_states_personal_income_linecode_query_url = "http://apps.bea.gov/api/data?UserID=" + bea_api_key + "&method=GetData&datasetname=Regional&TableName=SQINC1&GeoFIPS=STATE&LineCode=3&Year=LAST5&ResultFormat=JSON"
+    #query for last five years personal income by state.
+    personal_income_by_state_5year = pd.DataFrame(requests.get(bea_states_personal_income_linecode_query_url).json()["BEAAPI"]["Results"]["Data"])
+    return personal_income_by_state_5year
 
-#query for last five years personal income by state.
-personal_income_by_state_5year = pd.DataFrame(requests.get(bea_states_personal_income_linecode_query_url).json()["BEAAPI"]["Results"]["Data"])
 
+# Read the API KEY
+bea_api_key = get_api_key()
 
-#review the results of the query
-# st.write(" First 5 rows of the data obtained by querying for last five years personal income by state ")
-# st.write(personal_income_by_state_5year.head())
+# get data list from bea 
+bea_response = get_Data_List(bea_api_key)
 
+# get the regional table dataframe
+personal_income_by_state_5year = get_Data(bea_api_key)
 
 # clip out the unnecessary columns
 personal_income_by_state_5year=personal_income_by_state_5year[["GeoName", "TimePeriod", "DataValue"]]
@@ -80,19 +90,11 @@ list_of_states = [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Co
 
 personal_income_state_filter = personal_income_by_state_5year['GeoName'].isin(list_of_states)
 personal_income_filter_by_state = personal_income_by_state_5year[personal_income_state_filter]
-# st.write(" Data after filtering out just the states from the original DataFrame")
-# st.write(personal_income_filter_by_state.head())
-
-
 
 # Setting the time period to be the index and converting the datatype from string to dateTime
 personal_income_filter_by_state_2 = personal_income_filter_by_state
 personal_income_filter_by_state = personal_income_filter_by_state.set_index('TimePeriod')
 personal_income_filter_by_state.index = pd.to_datetime(personal_income_filter_by_state.index)
-
-# check resulting dataframe
-# st.write(" Data after convertng the TimePeriod col to DateTime format")
-# st.write(personal_income_filter_by_state.head())
 
 # Group the data by state and calculate the average personal income for every year from 2017 to current year
 
@@ -185,45 +187,6 @@ personal_income_sorted = personal_income_filter_by_state_2.sort_values(by = 'Dat
 #Pivoting the table around Geoname and Timeperiod
 personal_income_melt_2 = personal_income_sorted.melt(id_vars = ['GeoName', 'TimePeriod'])
 
-#st.write(personal_income_melt_2)
-# # Plots with x_value = states
-# layout_plots_2 = personal_income_melt_2.hvplot.bar(
-#     x='GeoName',
-#     y='value',
-#     by='variable',
-#     width=400,
-#     height=200,
-#     stacked=True,
-#     groupby='TimePeriod',
-#     legend=False,
-#     xlabel='',
-#     bar_width=1.0,
-#     rot = 90
-# ).layout().cols(3)
-
-# layout_plots_2
-
-# layout_plots_2 = px.bar(personal_income_melt_2, 
-#                         x='GeoName',
-#                         y='value',
-#                         #color = 'TimePeriod',
-#                         facet_col = "TimePeriod",
-#                         facet_col_wrap = 4,
-#                         facet_row_spacing = 0.03,
-#                         width = 1500,
-#                         height = 2400)
-
-#st.plotly_chart(layout_plots_2)
-
-# layout_plots_line_2 = px.bar(personal_income_melt_2, 
-#                         x='GeoName',
-#                         y='value',
-#                         color = 'TimePeriod',
-#                         width = 1000)
-                     
-                        
-# st.plotly_chart(layout_plots_line_2)
-
 st.header('US Map with Per Capita Personal Income for Q2 of 2021')
 
 # Dataframe grouped by state and extracted the last element from each group which is the personal income value for 2021Q2
@@ -282,9 +245,6 @@ st.plotly_chart(fig1, use_container_width = True)
 #begin process to filter states to focus analysis on. filter bottom 20 by personal income in 2020Q4.
 lowest_20_states_df = us_states_df.nsmallest(20, "DataValue")
 
-# show results - bottom 20 states by personal income
-#st.write(lowest_20_states_df[['name', 'DataValue']])
-
 # unstack dataframe 
 personal_income_filter_by_state = personal_income_filter_by_state.reset_index()
 unstacked_personal_income_by_state = personal_income_filter_by_state.set_index(['GeoName', 'TimePeriod']).unstack(level=0)
@@ -295,9 +255,7 @@ personal_income_growth_2017to2021Q2 = ((unstacked_personal_income_by_state.trans
 personal_income_growth_2017to2021Q2_temp = personal_income_growth_2017to2021Q2.reset_index().sort_values(by = 0)
 
 st.header("Percent growth personal income 2017Q1 to 2021Q2")
-#st.write(personal_income_growth_2017to2021Q2)
-# chart of all states rate of growth from 2017 to 2021Q1
-# Generating plotly express graphs based on the user selected year
+
 fig2 = px.bar(personal_income_growth_2017to2021Q2_temp,
               x = 'GeoName',
               y = 0,
@@ -357,16 +315,10 @@ st.plotly_chart(sub_fig)
 # filter the rates of personal income growth list by states that are in the bottom 20 states on personal income
 
 keys = list(lowest_20_states_df['name'])
-#st.write(keys)
-
-# filter list of growth in 5year timeframe out of bottom 20 states by personal income
-#st.write(personal_income_growth_2017to2021Q2['DataValue'][keys])
 
 #sort lowest to highest in rates of growth
 personal_income_growth_2017to2021Q2_lower_end=personal_income_growth_2017to2021Q2["DataValue"][keys].sort_values()
 
-#review lowest to highest 5year growth in personal income out of bottom 20 states in personal income
-#st.write(personal_income_growth_2017to2021Q2_lower_end)
 
 #plot growth in the 5 year timeframe in personal incomes for bottom 20 states in personal income
 fig5 = px.bar(personal_income_growth_2017to2021Q2_lower_end, 
@@ -384,6 +336,7 @@ states_filter_2_keys = list(personal_income_growth_2017to2021Q2_lower_end.iloc[-
 states_filter_keys_code = ['MS', 'KY','MT', 'IN', 'GA', 'LA','NM','UT']
 
 
+st.header("Target States")
 fig6 = go.Figure(data=go.Choropleth(
     locations=states_filter_keys_code, # Spatial coordinates
     z = personal_income_growth_2017to2021Q2["DataValue"][states_filter_2_keys].sort_values(), # Data to be color-coded
@@ -399,13 +352,12 @@ fig6 = go.Figure(data=go.Choropleth(
 fig6.update_layout(
         geo_scope='usa', # limite map scope to USA,
         title_text = " Map of US with target states and their percent growth from 2017Q1 - 2021Q2",
-         height = 800,
-         margin={"r":0,"t":0,"l":0,"b":0}
+         height = 800
+         #margin={"r":0,"t":0,"l":0,"b":0}
          )
 
-st.plotly_chart(fig6)
-#review keys
-#st.write(states_filter_2_keys)
+st.plotly_chart(fig6,use_container_width = True)
+
 
 #read csv file from kaggle
 population_by_state_df = pd.read_csv(Path('Resources/pop_2010_2020.csv'))
@@ -414,8 +366,6 @@ population_by_state_df = pd.read_csv(Path('Resources/pop_2010_2020.csv'))
 population_by_state = population_by_state_df[['GeoName',
                                              '2016','2017','2018','2019','2020']]
 population_by_state = population_by_state.set_index('GeoName')
-#review dataframe
-#st.write(population_by_state.head())
 
 #Inserted GDP by state & industy csv file
 gdp_country_state = pd.read_csv(Path('Resources/GDP_ALL_AREAS_1997_2020.csv'))
@@ -423,17 +373,10 @@ gdp_country_state = pd.read_csv(Path('Resources/GDP_ALL_AREAS_1997_2020.csv'))
 # filter by the target 8 states
 gdp_country_state=gdp_country_state[gdp_country_state["GeoName"].isin(states_filter_2_keys)]
 
-# review dataframe
-#st.write(gdp_country_state)
 
 # extract list of industries
 industry_list=gdp_country_state["Description"].drop_duplicates().sort_values()
 
-# review list
-##st.write(industry_list)
-#with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-    #st.write(industry_list)
-#st.write(vars(industry_list))
 
 #Filtered the data to only include GeoName, Description, Years
 gdp_state_5year = gdp_country_state[[
@@ -517,7 +460,8 @@ gdp_agriculture_df = gdp_state_5year_filter.get_group("  Agriculture, forestry, 
 
 gdp_agriculture_df = gdp_agriculture_df.set_index(['GeoName','Description'])
 
-gdp_capita_agriculture = gdp_agriculture_df / population_by_state
+gdp_capita_agriculture = gdp_agriculture_df / population_by_state * 1000000
+
 gdp_capita_agriculture = gdp_capita_agriculture.reset_index()
 
 #melting the df arounf GeoName and Description
@@ -563,7 +507,8 @@ gdp_healthcare_df = gdp_state_5year_filter.get_group("   Health care and social 
 
 gdp_healthcare_df = gdp_healthcare_df.set_index(['GeoName','Description'])
 
-gdp_capita_healthcare = gdp_healthcare_df / population_by_state
+gdp_capita_healthcare = gdp_healthcare_df / population_by_state* 1000000
+
 gdp_capita_healthcare = gdp_capita_healthcare.reset_index()
 
 #melting the df arounf GeoName and Description
@@ -606,7 +551,8 @@ gdp_manufacturing_df = gdp_state_5year_filter.get_group("  Manufacturing")
 
 gdp_manufacturing_df = gdp_manufacturing_df.set_index(['GeoName','Description'])
 
-gdp_capita_manufacturing = gdp_manufacturing_df / population_by_state
+gdp_capita_manufacturing = gdp_manufacturing_df / population_by_state* 1000000
+
 gdp_capita_manufacturing = gdp_capita_manufacturing.reset_index()
 
 #melting the df arounf GeoName and Description
@@ -649,7 +595,8 @@ gdp_private_df = gdp_state_5year_filter.get_group(' Private industries')
 
 gdp_private_df = gdp_private_df.set_index(['GeoName','Description'])
 
-gdp_capita_private = gdp_private_df / population_by_state
+gdp_capita_private = gdp_private_df / population_by_state* 1000000
+
 
 gdp_capita_private = gdp_capita_private.reset_index()
 
@@ -691,7 +638,8 @@ gdp_finance_df = gdp_state_5year_filter.get_group('  Finance, insurance, real es
 
 gdp_finance_df = gdp_finance_df.set_index(['GeoName','Description'])
 
-gdp_capita_finance = gdp_finance_df / population_by_state
+gdp_capita_finance = gdp_finance_df / population_by_state* 1000000
+
 gdp_capita_finance = gdp_capita_finance.reset_index()
 
 #melting the df arounf GeoName and Description
@@ -733,7 +681,8 @@ gdp_transportation_df = gdp_state_5year_filter.get_group('  Transportation and w
 
 gdp_transportation_df = gdp_transportation_df.set_index(['GeoName','Description'])
 
-gdp_capita_transportation = gdp_transportation_df / population_by_state
+gdp_capita_transportation = gdp_transportation_df / population_by_state* 1000000
+
 gdp_capita_transportation = gdp_capita_transportation.reset_index()
 
 #melting the df arounf GeoName and Description
@@ -779,7 +728,8 @@ gdp_generic_df = gdp_state_5year_filter.get_group(industry)
 
 gdp_generic_df = gdp_generic_df.set_index(['GeoName','Description'])
 
-gdp_capita_generic = gdp_generic_df / population_by_state
+gdp_capita_generic = gdp_generic_df / population_by_state* 1000000
+
 gdp_capita_generic = gdp_capita_generic.reset_index()
 
 #melting the df arounf GeoName and Description
