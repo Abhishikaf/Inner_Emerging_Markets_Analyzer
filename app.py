@@ -98,7 +98,7 @@ personal_income_filter_annual['TimePeriod'] = personal_income_filter_annual['Tim
 personal_income_filter_annual = personal_income_filter_annual.set_index('TimePeriod')
 
 
-st.header(" Annual Per Capita Personal Income ranked in ascending order")
+st.header(" Annual Personal Income ranked in ascending order")
 # Bar chart for states with an interactive slider
 # SelectBox for selecting the timeperiod to view the percapita Personal Income
 time = st.selectbox("Choose a Time Period:", personal_income_filter_annual.index.unique())
@@ -108,8 +108,8 @@ fig = px.bar(personal_income_filter_annual.loc[time].sort_values('DataValue'),
              x = 'GeoName',
              y = 'DataValue' ,
              width = 1000,
-             title = f'Annual Per Capita Personal Income for all states in ascending order -{time}',
-             labels = { 'GeoName': 'State', 'DataValue': 'Per Capita Personal Income($)'}, # Axis labels to be displayed on the chart and while hovering
+             title = f'Annual Personal Income for all states in ascending order -{time}',
+             labels = { 'GeoName': 'State', 'DataValue': 'Personal Income($)'}, # Axis labels to be displayed on the chart and while hovering
              color_discrete_sequence = ['pink']*len(personal_income_filter_annual)) 
 
 # Extracting the data to display the limiting line
@@ -126,7 +126,7 @@ st.plotly_chart(fig)
 
 #Plots for data pivoted by states
 
-st.header("Per Capita Personal Income for Fiscal Quarters from 2017 Q1 - 2021 Q2")
+st.header("Personal Income for Fiscal Quarters from 2017 Q1 - 2021 Q2")
 # Convert TimePeriod to datetime to get results in a sorted time manner
 personal_income_filter_by_state_2['TimePeriod'] = pd.to_datetime(personal_income_filter_by_state_2['TimePeriod']).dt.date
 
@@ -168,8 +168,8 @@ layout_plots_line = px.line(personal_income_melt,
                         color = 'GeoName',
                         width = 1000,
                         height = 800,
-                        labels = { 'TimePeriod': 'Fiscal Quarter', 'value': 'Per Capita Personal Income($)', 'GeoName':'State'},
-                        title = "5 year Per Capita Personal Income for all states")
+                        labels = { 'TimePeriod': 'Fiscal Quarter', 'value': 'Personal Income($)', 'GeoName':'State'},
+                        title = "5 year Personal Income for all states")
                      
                         
 st.plotly_chart(layout_plots_line)
@@ -180,7 +180,7 @@ personal_income_sorted = personal_income_filter_by_state_2.sort_values(by = 'Dat
 #Pivoting the table around Geoname and Timeperiod
 personal_income_melt_2 = personal_income_sorted.melt(id_vars = ['GeoName', 'TimePeriod'])
 
-st.header('US Map with Per Capita Personal Income for Q2 of 2021')
+st.header('US Map with Personal Income for Q2 of 2021')
 
 # Dataframe grouped by state and extracted the last element from each group which is the personal income value for 2021Q2
 
@@ -228,7 +228,7 @@ fig1 = go.Figure(data=go.Choropleth(
 
 fig1.update_layout(
         geo_scope='usa', # limite map scope to USA,
-        title_text = " Map of US with per capita Personal Income in Q2 of 2021",
+        title_text = " Map of US with Personal Income in Q2 of 2021",
          height = 800
          )#margin={"r":0,"t":0,"l":0,"b":0}
 
@@ -300,7 +300,7 @@ fig3.update_traces(yaxis = "y2",mode='markers+lines')
 sub_fig.add_traces(fig4.data + fig3.data)
 sub_fig.update_layout(width = 1000, height = 500, title_text = " Personal Income with Percentage Growth")
 sub_fig.layout.xaxis.title = "State"
-sub_fig.layout.yaxis.title = " Per Capita Personal Income for 2021Q2"
+sub_fig.layout.yaxis.title = " Personal Income for 2021Q2"
 sub_fig.layout.yaxis2.title = "Percentage Growth from 2017Q1 to 2021Q2"
 
 st.plotly_chart(sub_fig)
@@ -351,6 +351,7 @@ fig6.update_layout(
 
 st.plotly_chart(fig6,use_container_width = True)
 
+st.write("These are the top 8 states chosen by growth out of the lower income states to focus on ")
 
 #read csv file from kaggle
 population_by_state_df = pd.read_csv(Path('Resources/pop_2010_2020.csv'))
@@ -420,7 +421,7 @@ industry_growth_rank = ((unstacked_gdp_capita_industry["Value"].loc["2020"]/unst
 # renamed the Geoname column to the industry label so it can be used to display on the graphs
 gdp_capita_industry=gdp_capita_industry.rename(columns={'GeoName': industry_label})
 
-st.header("GDP Per Capita for all industry for the target states - 2016 to 2020")
+st.header("GDP Per Capita for all industry for target states - 2016 to 2020")
 industry_plot = px.bar(gdp_capita_industry, 
                         x='Date',
                         y='Value',
@@ -462,7 +463,7 @@ gdp_capita_agriculture = gdp_capita_agriculture.melt(['GeoName','Description'], 
 
 # st.write(gdp_capita_agriculture.tail())
 
-st.header("GDP Per Capita for Agriculture for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Agriculture for target states - 2016 to 2020")
 # #visualizing states gdp per capita Agriculture
 agriculture_plot = px.bar(gdp_capita_agriculture, 
                         x='Date',
@@ -508,7 +509,7 @@ gdp_capita_healthcare = gdp_capita_healthcare.reset_index()
 gdp_capita_healthcare = gdp_capita_healthcare.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 #st.write(gdp_capita_healthcare.tail())
-st.header("GDP Per Capita for Healthcare for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Healthcare for target states - 2016 to 2020")
 healthcare_plot = px.bar(gdp_capita_healthcare, 
                         x='Date',
                         y='Value',
@@ -553,7 +554,7 @@ gdp_capita_manufacturing = gdp_capita_manufacturing.melt(['GeoName','Description
 
 #st.write(gdp_capita_manufacturing.tail())
 
-st.header("GDP Per Capita for Manufacturing for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Manufacturing for target states - 2016 to 2020")
 manufacturing_plot = px.bar(gdp_capita_manufacturing, 
                         x='Date',
                         y='Value',
@@ -597,7 +598,7 @@ gdp_capita_private = gdp_capita_private.reset_index()
 gdp_capita_private = gdp_capita_private.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 # st.write(gdp_capita_private.tail())
-st.header("GDP Per Capita for Private Sector for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Private Sector for target states - 2016 to 2020")
 private_plot = px.bar(gdp_capita_private, 
                         x='Date',
                         y='Value',
@@ -639,7 +640,7 @@ gdp_capita_finance = gdp_capita_finance.reset_index()
 gdp_capita_finance = gdp_capita_finance.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 
 # st.write(gdp_capita_finance.tail())
-st.header("GDP Per Capita for Finance for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Finance for target states - 2016 to 2020")
 finance_plot = px.bar(gdp_capita_finance, 
                         x='Date',
                         y='Value',
@@ -682,7 +683,7 @@ gdp_capita_transportation = gdp_capita_transportation.reset_index()
 gdp_capita_transportation = gdp_capita_transportation.melt(['GeoName','Description'], var_name='Date', value_name='Value')
 # st.write(gdp_capita_transportation.tail())
 
-st.header("GDP Per Capita for Transportation for the target states - 2016 to 2020")
+st.header("GDP Per Capita for Transportation for target states - 2016 to 2020")
 transportation_plot = px.bar(gdp_capita_transportation, 
                         x='Date',
                         y='Value',
@@ -731,7 +732,6 @@ gdp_capita_generic = gdp_capita_generic.melt(['GeoName','Description'], var_name
 # drop Description column and unstack
 unstacked_gdp_capita_generic = gdp_capita_generic.drop(columns=["Description"]).set_index(['GeoName', 'Date']).unstack(level=0)
 
-st.write(unstacked_gdp_capita_generic["Value"].loc["2020"])
 # find percent growths. if the 2020 value is not available, do not include it and return a relevant title.
 if (unstacked_gdp_capita_generic["Value"].loc["2020"] == 0).sum() > 0:
     generic_growth_rank = ((unstacked_gdp_capita_generic["Value"].loc["2019"]/unstacked_gdp_capita_generic["Value"].loc["2016"] - 1) * 100).sort_values()
@@ -741,7 +741,7 @@ else:
     text="2016 - 2020"
 
 
-st.header(f"GDP Per Capita for {industry} for the target states - {text}")
+st.header(f"GDP Per Capita for {industry} for target states - {text}")
 generic_plot = px.bar(gdp_capita_generic, 
                         x='Date',
                         y='Value',
@@ -762,9 +762,47 @@ generic_plot_2 = px.bar(generic_growth_rank,
                           width = 1200
                        )
 
-generic_plot_2.update_layout(title_text = f"Percent Growth for last five years for {industry}",
+generic_plot_2.update_layout(title_text = f"Percent Growth for {text} for: {industry}",
                                 showlegend = False)
 
 st.plotly_chart(generic_plot_2)
 
 
+listoflists = []
+listoflists.append(unstacked_gdp_capita_industry["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_agriculture["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_healthcare["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_manufacturing["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_private["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_finance["Value"].loc["2019"])
+listoflists.append(unstacked_gdp_capita_transportation["Value"].loc["2019"])
+
+pie_chart_data = pd.DataFrame(listoflists, 
+                               columns = ['Georgia', 'Indiana', 'Kentucky', 'Louisiana', 'Mississippi', 'Montana', 'New Mexico', 'Utah'])
+pie_chart_data['Industry'] = ['All Industry', 'Agriculture', 'Healthcare', 'Manufacturing', 'Private Industries', 'Finance', 'Transportation']
+pie_chart_data.set_index('Industry')
+
+# pie_fig1 = px.pie(pie_chart_data, values = 'Georgia', names = 'Industry')
+# st.plotly_chart(pie_fig1)
+
+# specs = [{'type':'domain'}, {'type':'domain'}]
+# pie_fig = make_subplots(rows=1, cols=2, specs=specs)
+
+# # Define pie charts
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Georgia'], name='Georgia',domain=dict(x=[0,0.5])),1, 1)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Indiana'], name='Indiana',domain=dict(x=[0.5,1])),1, 2)
+
+# # Tune layout and hover info
+# pie_fig.update_traces(hoverinfo='label+percent+name', textinfo='none')
+# pie_fig.update_layout(title_text='Industry Distribution by GDP in Target States'
+#            )
+
+# pie_fig = go.Figure(pie_fig)
+# st.plotly_chart(pie_fig,use_container_width = True)
+
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Kentucky'], name='Kentucky',domain=dict(x=[0.5,0.75], y= [0,0.5])),1, 3)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Louisiana'], name='Louisiana',domain=dict(x=[0.75,1], y= [0.5,1])),1, 4)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Mississippi'], name='Mississippi',domain=dict(x=[0,0.25], y= [0,0.5])),2, 1)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Montana'], name='Monatana',domain=dict(x=[0.25,0.5], y= [0.5,1])),2, 2)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['New Mexico'], name='New Mexico',domain=dict(x=[0.5,0.75], y= [0,0.5])),2, 3)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Utah'], name='Utah',domain=dict(x=[0.75,1], y= [0.5,1])),2, 4)
