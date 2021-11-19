@@ -768,8 +768,9 @@ generic_plot_2.update_layout(title_text = f"Percent Growth for {text} for: {indu
 st.plotly_chart(generic_plot_2)
 
 
+st.header(" Industry Distribution by GDP in Target states")
 listoflists = []
-listoflists.append(unstacked_gdp_capita_industry["Value"].loc["2019"])
+#listoflists.append(unstacked_gdp_capita_industry["Value"].loc["2019"])
 listoflists.append(unstacked_gdp_capita_agriculture["Value"].loc["2019"])
 listoflists.append(unstacked_gdp_capita_healthcare["Value"].loc["2019"])
 listoflists.append(unstacked_gdp_capita_manufacturing["Value"].loc["2019"])
@@ -779,18 +780,39 @@ listoflists.append(unstacked_gdp_capita_transportation["Value"].loc["2019"])
 
 pie_chart_data = pd.DataFrame(listoflists, 
                                columns = ['Georgia', 'Indiana', 'Kentucky', 'Louisiana', 'Mississippi', 'Montana', 'New Mexico', 'Utah'])
-pie_chart_data['Industry'] = ['All Industry', 'Agriculture', 'Healthcare', 'Manufacturing', 'Private Industries', 'Finance', 'Transportation']
+pie_chart_data['Industry'] = ['Agriculture', 'Healthcare', 'Manufacturing', 'Private Industries', 'Finance', 'Transportation']
 pie_chart_data.set_index('Industry')
 
-# pie_fig1 = px.pie(pie_chart_data, values = 'Georgia', names = 'Industry')
-# st.plotly_chart(pie_fig1)
+pie_fig1 = px.pie(pie_chart_data, values = 'Georgia', names = 'Industry', title = 'Geogia')
+st.plotly_chart(pie_fig1,use_container_width = True)
 
-# specs = [{'type':'domain'}, {'type':'domain'}]
+pie_fig2 = px.pie(pie_chart_data, values = 'Indiana', names = 'Industry', title = 'Indiana')
+st.plotly_chart(pie_fig2,use_container_width = True)
+
+pie_fig3 = px.pie(pie_chart_data, values = 'Kentucky', names = 'Industry', title = ' Kentucky')
+st.plotly_chart(pie_fig3,use_container_width = True)
+
+pie_fig4 = px.pie(pie_chart_data, values = 'Louisiana', names = 'Industry', title = 'Louisiana')
+st.plotly_chart(pie_fig4,use_container_width = True)
+
+pie_fig5 = px.pie(pie_chart_data, values = 'Mississippi', names = 'Industry', title = ' Mississippi')
+st.plotly_chart(pie_fig5,use_container_width = True)
+
+pie_fig6 = px.pie(pie_chart_data, values = 'Montana', names = 'Industry', title = ' Montana')
+st.plotly_chart(pie_fig6,use_container_width = True)
+
+pie_fig7 = px.pie(pie_chart_data, values = 'New Mexico', names = 'Industry', title = 'New Mexico')
+st.plotly_chart(pie_fig7,use_container_width = True)
+
+pie_fig8 = px.pie(pie_chart_data, values = 'Utah', names = 'Industry', title = 'Utah')
+st.plotly_chart(pie_fig8,use_container_width = True)
+
+# specs = specs=[[{'type':'domain'}, {'type':'domain'}]]
 # pie_fig = make_subplots(rows=1, cols=2, specs=specs)
 
 # # Define pie charts
-# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Georgia'], name='Georgia',domain=dict(x=[0,0.5])),1, 1)
-# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Indiana'], name='Indiana',domain=dict(x=[0.5,1])),1, 2)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Georgia'], name='Georgia'),1, 1)
+# pie_fig.add_trace(go.Pie(labels=pie_chart_data['Industry'], values=pie_chart_data['Indiana'], name='Indiana'),1, 2)
 
 # # Tune layout and hover info
 # pie_fig.update_traces(hoverinfo='label+percent+name', textinfo='none')
