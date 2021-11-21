@@ -366,14 +366,15 @@ gdp_state_5year['2017'] = gdp_state_5year['2017'].astype('float')
 gdp_state_5year['2019'] = gdp_state_5year['2019'].astype('float')
 gdp_state_5year['2020'] = gdp_state_5year['2020'].astype('float')
 
-
 #grouped by Description to pick out All industry total
 gdp_state_5year_filter = gdp_state_5year.groupby('Description')
+
 
 #Filtering All Industry df
 unstacked_gdp_capita_industry = plot_industry_analysis(gdp_state_5year_filter,population_by_state,'All industry total')
 
 # filtering Agriculture
+
 
 unstacked_gdp_capita_agriculture = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"  Agriculture, forestry, fishing and hunting")
 
@@ -391,6 +392,7 @@ unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,pop
 
 #filtering df for transportation gdp by state
 unstacked_gdp_capita_transportation = plot_industry_analysis(gdp_state_5year_filter,population_by_state,'  Transportation and warehousing')
+
 
 # Selectbox to input a user specified industry
 industry = st.selectbox("Choose a Industry to analyze:", gdp_country_state["Description"].drop_duplicates().sort_values())
@@ -443,4 +445,5 @@ unstacked_gdp_capita_generic = plot_industry_analysis(gdp_state_5year_filter,pop
 
 # pie_fig8 = px.pie(pie_chart_data, values = 'Utah', names = 'Industry', title = 'Utah')
 # st.plotly_chart(pie_fig8,use_container_width = True)
+
 
