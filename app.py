@@ -1,3 +1,10 @@
+# Inner_Emerging_Markets_Analyzer
+
+# Co-Programmed by Preston Hodsman, Thomas Leahy and Abhishika Fatehpuria
+# The program outputs a Streamlit dashboard containing analysis of all the US states based on their personal income from year 2017 to 2021 and 
+# percentage gdp growth and identifying 8 target states to focus on investing
+
+# This is the main deliverable code file for our project. We have also included the Jupyter lab file inner_emerging_markets_analyzer.ipynb, in the project folder for anybody who wants to work on it and take our work further.
 
 #import required libraries
 
@@ -364,19 +371,21 @@ gdp_state_5year_filter = gdp_state_5year.groupby('Description')
 
 
 #Filtering All Industry df
-unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,'All industry total')
+unstacked_gdp_capita_industry = plot_industry_analysis(gdp_state_5year_filter,population_by_state,'All industry total')
 
 # filtering Agriculture
-unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"  Agriculture, forestry, fishing and hunting")
+
+
+unstacked_gdp_capita_agriculture = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"  Agriculture, forestry, fishing and hunting")
 
 #filtering out Healthcare df
-unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"   Health care and social assistance")
+unstacked_gdp_capita_healthcare = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"   Health care and social assistance")
 
 #filtering a df out for manufacturing
-unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"  Manufacturing")
+unstacked_gdp_capita_manufacturing = plot_industry_analysis(gdp_state_5year_filter,population_by_state,"  Manufacturing")
 
 #filtering df for private gdp by state
-unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,' Private industries')
+unstacked_gdp_capita_private = plot_industry_analysis(gdp_state_5year_filter,population_by_state,' Private industries')
 
 #filteting out df for Finance gdp by state
 unstacked_gdp_capita_finance = plot_industry_analysis(gdp_state_5year_filter,population_by_state,'  Finance, insurance, real estate, rental, and leasing')
@@ -391,44 +400,50 @@ industry = st.selectbox("Choose a Industry to analyze:", gdp_country_state["Desc
 unstacked_gdp_capita_generic = plot_industry_analysis(gdp_state_5year_filter,population_by_state,industry)
 
 # Pie graphs to determine the slice of industry in the state
+# This is still under construction!!!!
 
-st.header(" Industry Distribution by GDP in Target states")
-listoflists = []
+# Our thought here was to visualize the slice of each sector in a particular state, to analyze which sector provides the largest growth in the target state
+# Currently, it takes into account the sectors that we have identified to be analyzed. Since Private sector covers a lot of industries under its umbrella, 
+# we should exclude that and maybe include some more sectors like Education, infrasrtucture etc. in the analysis
 
-listoflists.append(unstacked_gdp_capita_agriculture["Value"].loc["2019"])
-listoflists.append(unstacked_gdp_capita_healthcare["Value"].loc["2019"])
-listoflists.append(unstacked_gdp_capita_manufacturing["Value"].loc["2019"])
-listoflists.append(unstacked_gdp_capita_private["Value"].loc["2019"])
-listoflists.append(unstacked_gdp_capita_finance["Value"].loc["2019"])
-listoflists.append(unstacked_gdp_capita_transportation["Value"].loc["2019"])
 
-pie_chart_data = pd.DataFrame(listoflists, 
-                               columns = ['Georgia', 'Indiana', 'Kentucky', 'Louisiana', 'Mississippi', 'Montana', 'New Mexico', 'Utah'])
-pie_chart_data['Industry'] = ['Agriculture', 'Healthcare', 'Manufacturing', 'Private Industries', 'Finance', 'Transportation']
-pie_chart_data.set_index('Industry')
+# st.header(" Industry Distribution by GDP in Target states")
+# listoflists = []
 
-pie_fig1 = px.pie(pie_chart_data, values = 'Georgia', names = 'Industry', title = 'Geogia')
-st.plotly_chart(pie_fig1,use_container_width = True)
+# listoflists.append(unstacked_gdp_capita_agriculture["Value"].loc["2019"])
+# listoflists.append(unstacked_gdp_capita_healthcare["Value"].loc["2019"])
+# listoflists.append(unstacked_gdp_capita_manufacturing["Value"].loc["2019"])
+# listoflists.append(unstacked_gdp_capita_private["Value"].loc["2019"])
+# listoflists.append(unstacked_gdp_capita_finance["Value"].loc["2019"])
+# listoflists.append(unstacked_gdp_capita_transportation["Value"].loc["2019"])
 
-pie_fig2 = px.pie(pie_chart_data, values = 'Indiana', names = 'Industry', title = 'Indiana')
-st.plotly_chart(pie_fig2,use_container_width = True)
+# pie_chart_data = pd.DataFrame(listoflists, 
+#                                columns = ['Georgia', 'Indiana', 'Kentucky', 'Louisiana', 'Mississippi', 'Montana', 'New Mexico', 'Utah'])
+# pie_chart_data['Industry'] = ['Agriculture', 'Healthcare', 'Manufacturing', 'Private Industries', 'Finance', 'Transportation']
+# pie_chart_data.set_index('Industry')
 
-pie_fig3 = px.pie(pie_chart_data, values = 'Kentucky', names = 'Industry', title = ' Kentucky')
-st.plotly_chart(pie_fig3,use_container_width = True)
+# pie_fig1 = px.pie(pie_chart_data, values = 'Georgia', names = 'Industry', title = 'Geogia')
+# st.plotly_chart(pie_fig1,use_container_width = True)
 
-pie_fig4 = px.pie(pie_chart_data, values = 'Louisiana', names = 'Industry', title = 'Louisiana')
-st.plotly_chart(pie_fig4,use_container_width = True)
+# pie_fig2 = px.pie(pie_chart_data, values = 'Indiana', names = 'Industry', title = 'Indiana')
+# st.plotly_chart(pie_fig2,use_container_width = True)
 
-pie_fig5 = px.pie(pie_chart_data, values = 'Mississippi', names = 'Industry', title = ' Mississippi')
-st.plotly_chart(pie_fig5,use_container_width = True)
+# pie_fig3 = px.pie(pie_chart_data, values = 'Kentucky', names = 'Industry', title = ' Kentucky')
+# st.plotly_chart(pie_fig3,use_container_width = True)
 
-pie_fig6 = px.pie(pie_chart_data, values = 'Montana', names = 'Industry', title = ' Montana')
-st.plotly_chart(pie_fig6,use_container_width = True)
+# pie_fig4 = px.pie(pie_chart_data, values = 'Louisiana', names = 'Industry', title = 'Louisiana')
+# st.plotly_chart(pie_fig4,use_container_width = True)
 
-pie_fig7 = px.pie(pie_chart_data, values = 'New Mexico', names = 'Industry', title = 'New Mexico')
-st.plotly_chart(pie_fig7,use_container_width = True)
+# pie_fig5 = px.pie(pie_chart_data, values = 'Mississippi', names = 'Industry', title = ' Mississippi')
+# st.plotly_chart(pie_fig5,use_container_width = True)
 
-pie_fig8 = px.pie(pie_chart_data, values = 'Utah', names = 'Industry', title = 'Utah')
-st.plotly_chart(pie_fig8,use_container_width = True)
+# pie_fig6 = px.pie(pie_chart_data, values = 'Montana', names = 'Industry', title = ' Montana')
+# st.plotly_chart(pie_fig6,use_container_width = True)
+
+# pie_fig7 = px.pie(pie_chart_data, values = 'New Mexico', names = 'Industry', title = 'New Mexico')
+# st.plotly_chart(pie_fig7,use_container_width = True)
+
+# pie_fig8 = px.pie(pie_chart_data, values = 'Utah', names = 'Industry', title = 'Utah')
+# st.plotly_chart(pie_fig8,use_container_width = True)
 
 
