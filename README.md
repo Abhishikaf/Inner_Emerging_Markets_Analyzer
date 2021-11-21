@@ -27,24 +27,31 @@ Lastly, the GDP for each industry in all the states in the US was obtained by do
 ## Applications:
 
 * Test a hypothesis:
+ 
     Is there a similar ranking within these states of overall growth and manufacturing growth?
 
 * Answer questions:
+
     Which industries in these states seem to have taken bigger hits from 2020 with recovery opportunity, which seemed more resilient?
     Hypotheses related to this question:
+ 
         - Jobs with more work from home opportunity would have not taken as much of a hit
+
 	    - Jobs involving travel, retail, restaurants, would have taken more of a hit
+
 	    - Delivery services would have increased
 
 * Identify markets with good investment opportunities:
+
 		- State with highest growth in an industry the investor is involved in
+
         - State that took the biggest hit in 2020 in an industry, but is expected to recover
 
 ---
 
 ## Analysis:
 
-## An overview of our Streamlit Dashboard
+## An overview of the application on Streamlit Dashboard
 
 Annual Personal Income for all the states ranked in ascending order. The selectbox lets you select a year, to view the personal incomes for the states for that fiscal year. The red line on the map divides the map into two parts, the left of which identifies the 20 poorer states where we want to focus
 
@@ -80,7 +87,7 @@ Chrolopleth Map of the targeted eight states with the highest rate of growth in 
 * Mississippi
 * Montana
 * New Mexico
-* Utah<br>
+* Utah
 
 ![Choropleth map of targeted states](images/streamlit_7.png)
 
@@ -107,10 +114,12 @@ One of our Hypotheses was that the manufacturing industry is significant in driv
 ![Hypotheses testing](images/streamlit_11.png)
 
 Other Hypotheses that we tested were:
+
     -Jobs with more work from home opportunity would have not taken as much of a hit in 2020
+
     -Jobs like transportation would have taken a bigger hit.
 
-This Hypothese tested out to be true as is visible in the following image:
+This Hypotheses tested out to be true as is visible in the following image:
 
 ![Hypotheses testing2](images/streamlit_12.png) 
 
