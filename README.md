@@ -2,26 +2,11 @@
 
 ## Project Proposal: Inner Emerging Economies Analysis
 
-This project is proposed to use financial technology analysis tools to find investment opportunities for emerging markets within the United States.
-We are defining Emerging Markets to refer to US states which have lower than average GDP per capita, but high rates of GDP growth in recent years.
-The first step of the analysis will attempt to narrow down a shorter list of US states to focus the analysis on, and will use a combination of data about GDP per capita, GDP growth, and cost of living. The next step will be to analyze some sectors of these states to find which have been growing in recent years and have a good potential for continued growth.
-Some of the data sources we have identified include BEA.gov and kaggle.com but more may be included. Some sectors we are interested in analyzing include tech, healthcare, finance, agriculture, manufacturing, transportation. The sectors that appear to have higher rates of recent growth in the states targetted for analysis will be highlighted.
-We will also explore a few secondary economic metrics. Some of the group's ideas include infrastructure, pension outlays, and happiness surveys. The ones which appear to be useful analytically we will include in the final presentation.
-The data is intended to be used to help investors identify markets to start companies in or expand existing operations into. The end result will be a presentation where investors can look at this data in an easy to use visual format.
-
-
----
-## Implementation: The Emerging Economy App
-
-
-We conceived this project in order to facilitate decisions involving investment in Emerging Markets within the United States.
-The idea of this Emerging Markets analysis is to encourage investment in US states with lower average incomes. Out of those states, we used data to find a smaller target group of lower income states that have the highest growth rates in recent years. We created the app using streamlit
-
-    The application can be used to easily view bar charts and rankings of growth in the last five years of growth of any industry for these target states.
-
-    Investors planning on starting businesses or expanding branches of existing businesses will be able to use this to identify opportunities in industries they are focused on.
-    
-    Whether you are looking for the emerging state with the highest growth rate in a sector, or looking for potentials in sectors that took a hit in 2020 but are likely to rebound, you will be able to quickly visualize the change in recent years.
+This project is uses financial technology analysis tools to find investment opportunities for emerging markets within the United States.
+We are defining Emerging Markets to refer to US states which have lower than average personal incomes, but high rates of personal income growth in recent years.
+The first step of the analysis will attempt to narrow down a shorter list of US states to focus the analysis on, and uses a combination of data of current personal income and growth of personal income in the last five years. The next step analyzes some sectors of these states to find which have been growing in recent years and have a good potential for continued growth.
+Some of the data sources use include BEA.gov and kaggle.com. Some sectors we are interested in analyzing include tech, healthcare, finance, agriculture, manufacturing, transportation. The sectors that appear to have higher rates of recent growth in the states targetted for analysis will be highlighted.
+The data is intended to be used to help investors identify markets to start companies in or expand existing operations into. The end result will be a presentation where investors can look at this data in an easy to use visual format, with a tool where they can pick an industry and see a display of the past five years of activity in that industry in each of the target states, and a ranking of those states in terms of their recent five year growth.
 
 ---
 ## Data Sources:
@@ -78,7 +63,7 @@ Percent Growth for all the states from 2017Q1 to 2021Q2 ranked in ascending orde
 
 ![Percent Growth](images/streamlit_4.png)<br>
 
-Personal Income plotted with percent growth for all the states. It shows an interesting trend. One of our hypotheses was that states with high personal income will have a higher growth percentage and vice versa. Overall, we expected the line plot of percent growth to be linear with a couple of anomalies. But we see there are some high income states like New Hampshire and Connecticut which show a very low rate of growth. Similarly there are some low income states like New Mexico and Utah which show an unprecedented growth rate. <br> 
+Personal Income plotted with percent growth for all the states. It shows an interesting trend. One of our hypotheses was that states with high personal income will have a higher growth percentage and vice versa. Overall, we expected the line plot of percent growth to be linear with a couple of anomalies. But we see there are some high income states like New Hampshire and Connecticut which show a very low rate of growth. Similarly there are some low income states like New Mexico and Utah which show impressive growth rates. <br> 
 ![Personal Income with Growth Rate](images/streamlit_5.png)<br>
 
 
@@ -121,7 +106,7 @@ One of our Hypotheses was that it is the manufacturing industry that drive the o
 
 ![Hypotheses testing](images/streamlit_11.png)<br>
 
-The other Hypotheses that we tested was that:<br>
+The other Hypotheses that we tested were:<br>
     -Jobs with more work from home opportunity would have not taken as much of a hit in 2020<br>
     -Jobs like transportation would have taken a bigger hit.<br>
 
@@ -132,11 +117,10 @@ This Hypothese tested out to be true as is visible in the following image:<br>
 ---
 ## Future Additions / Next Steps
 * Updating the program to work for new data as it comes out
-* Finding a list of stocks associated with a particular sector and include in our analysis
-* Use some more parameters to filter the data and identify target states
-* Allow the user to set some parameters in the beginning
+* Finding a list of stocks associated with a particular sector and state that the user wants to look into
+* Allow the user control over paratmeters to identify target states to analyze
 * Analyze some non financial metrics like happiness for the target states
-* Include some Pie graphs to identify the percentage pie of various sectors in each state
+* Include some Pie graphs to view the percentage of various sectors in each state
 
 ---
 ## Technologies
@@ -177,6 +161,8 @@ To use the inner_emerging_markets_analyzer tool, please download the folder in V
 ```python
 streamlit run app.py
 ```
+
+Additionally, we have included a jupyter lab file which was used in development.
 
 ---
 
