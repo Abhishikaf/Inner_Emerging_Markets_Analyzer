@@ -63,28 +63,28 @@ Lastly, the GDP for each industry in all the states in the US was obtained by do
 
 Annual Personal Income for all the states ranked in ascending order. The selectbox lets you select a year, to view the personal incomes for the states for that fiscal year. The red line on the map divides the map into two parts, the left of which identifies the 20 poorer states where we want to focus<br>
 <br>
-![Annual Personal Income](Images/streamlit_1.png)<br>
+![Annual Personal Income](images/streamlit_1.png)<br>
 <br>
 A general overview of the trends for Personal Income for all states for the past five year period. There are obvious bumps from the rounds of stimulus checks but there is still an upward general trend.<br>
 
-![Personal Income for all states](Images/streamlit_2.png)<br>
+![Personal Income for all states](images/streamlit_2.png)<br>
 
 
 A choropleth map of the United states, color coded using the personal income data from 2021 Q2. The darker color represent the states with lower personal income<br>
 
-![US map with personal income from 2021 Q2](Images/streamlit_3.png)<br>
+![US map with personal income from 2021 Q2](images/streamlit_3.png)<br>
 
 Percent Growth for all the states from 2017Q1 to 2021Q2 ranked in ascending order<br>
 
 ![Percent Growth](Images/streamlit_4.png)<br>
 
 Personal Income plotted with percent growth for all the states. It shows an interesting trend. One of our hypotheses was that states with high personal income will have a higher growth percentage and vice versa. Overall, we expected the line plot of percent growth to be linear with a couple of anomalies. But we see there are some high income states like New Hampshire and Connecticut which show a very low rate of growth. Similarly there are some low income states like New Mexico and Utah which show an unprecedented growth rate. <br> 
-![Personal Income with Growth Rate](Images/streamlit_5.png)<br>
+![Personal Income with Growth Rate](images/streamlit_5.png)<br>
 
 
 The following graph shows the singled out 20 of the lowest ranking States in personal income, then ranked based on the rate of growth of personal incomes in each one for the past five-year period<br>
 
-![20 Low Income States](Images/streamlit_6.png)<br>
+![20 Low Income States](images/streamlit_6.png)<br>
 
 Chrolopleth Map of the targeted eight states with the highest rate of growth in personal incomes for the five year time period. The target states are:
 
@@ -97,11 +97,11 @@ Chrolopleth Map of the targeted eight states with the highest rate of growth in 
 * New Mexico
 * Utah<br>
 
-![Choropleth map of targeted states](Images/streamlit_7.png)<br>
+![Choropleth map of targeted states](images/streamlit_7.png)<br>
 
 Following shows rankings of growth in the target states in the last five years in all the insustries, using bar charts. We see Utah has the highest growth percentage in the last 5 years. Based on our analysis, we can identify Utah as one or the more profitable state to invest in. <br>
 
-![Analysis of all Industries](Images/streamlit_8.png)<br>
+![Analysis of all Industries](images/streamlit_8.png)<br>
 
 We identified 6 fast growing sectors to test our hypotheses and identify states for investments in that sector. The sectors we analyzed are:
 * Agriculture
@@ -111,15 +111,15 @@ We identified 6 fast growing sectors to test our hypotheses and identify states 
 * Finance
 * Transportation<br>
 
-![Sector Analysis](Images/streamlit_9.png)<br>
+![Sector Analysis](images/streamlit_9.png)<br>
 
 We added another selectbox, where the user can select any industry they want, and can get a gdp per capita analysis of that sector for the last five years in the target state, alongwith the growth rank of the target states for that sector based on the percent growth for the five year period. Our data set had missing values for some sectors for the year 2020, so the program was modified to filter out year 2020 if no data was available, to  avoid the resulting skew. <br>
 
-![User defined Sector Analysis](Images/streamlit_10.png)<br>
+![User defined Sector Analysis](images/streamlit_10.png)<br>
 
 One of our Hypotheses was that it is the manufacturing industry that drive the overall growth of a state. We can see from the following bar charts, that the overall growth percentage rankof a state is quite different from the manufacturing growth rate rank. <br>
 
-![Hypotheses testing](Images/streamlit_11.png)<br>
+![Hypotheses testing](images/streamlit_11.png)<br>
 
 The other Hypotheses that we tested was that:<br>
     -Jobs with more work from home opportunity would have not taken as much of a hit in 2020<br>
@@ -127,7 +127,7 @@ The other Hypotheses that we tested was that:<br>
 
 This Hypothese tested out to be true as is visible in the following image:<br>
 
-![Hypotheses testing2](Images/streamlit_12.png) <br>
+![Hypotheses testing2](images/streamlit_12.png) <br>
 
 ---
 ## Future Additions / Next Steps
