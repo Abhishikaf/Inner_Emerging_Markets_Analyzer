@@ -26,14 +26,15 @@ Lastly, the GDP for each industry in all the states in the US was obtained by do
 ---
 ## Applications:
 
-* Test a hypothesis:
+Test a hypothesis:
  
-    Is there a similar ranking within these states of overall growth and manufacturing growth?
+- Is there a similar ranking within these states of overall growth and manufacturing growth?
 
-* Answer questions:
+Answer questions:
 
-    Which industries in these states seem to have taken bigger hits from 2020 with recovery opportunity, which seemed more resilient?
-    Hypotheses related to this question:
+- Which industries in these states seem to have taken bigger hits from 2020 with recovery opportunity, which seemed more resilient?
+
+Hypotheses related to this question:
  
 - Jobs with more work from home opportunity would have not taken as much of a hit
 
@@ -41,7 +42,7 @@ Lastly, the GDP for each industry in all the states in the US was obtained by do
 
 - Delivery services would have increased
 
-* Identify markets with good investment opportunities:
+Identify markets with good investment opportunities:
 
 - State with highest growth in an industry the investor is involved in
 
