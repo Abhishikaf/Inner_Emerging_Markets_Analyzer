@@ -76,7 +76,7 @@ A choropleth map of the United states, color coded using the personal income dat
 
 Percent Growth for all the states from 2017Q1 to 2021Q2 ranked in ascending order<br>
 
-![Percent Growth](Images/streamlit_4.png)<br>
+![Percent Growth](images/streamlit_4.png)<br>
 
 Personal Income plotted with percent growth for all the states. It shows an interesting trend. One of our hypotheses was that states with high personal income will have a higher growth percentage and vice versa. Overall, we expected the line plot of percent growth to be linear with a couple of anomalies. But we see there are some high income states like New Hampshire and Connecticut which show a very low rate of growth. Similarly there are some low income states like New Mexico and Utah which show an unprecedented growth rate. <br> 
 ![Personal Income with Growth Rate](images/streamlit_5.png)<br>
