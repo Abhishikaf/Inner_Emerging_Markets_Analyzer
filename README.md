@@ -2,7 +2,7 @@
 
 ## Project Proposal: Inner Emerging Economies Analysis
 
-This project is uses financial technology analysis tools to find investment opportunities for emerging markets within the United States.
+This project uses financial technology analysis tools to find investment opportunities for emerging markets within the United States.
 We are defining Emerging Markets to refer to US states which have lower than average personal incomes, but high rates of personal income growth in recent years.
 
 The first step of the analysis will attempt to narrow down a shorter list of US states to focus the analysis on, and uses a combination of data of current personal income and growth of personal income in the last five years. The next step analyzes some sectors of these states to find which have been growing in recent years and have a good potential for continued growth.
