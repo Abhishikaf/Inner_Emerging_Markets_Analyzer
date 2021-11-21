@@ -35,17 +35,17 @@ Lastly, the GDP for each industry in all the states in the US was obtained by do
     Which industries in these states seem to have taken bigger hits from 2020 with recovery opportunity, which seemed more resilient?
     Hypotheses related to this question:
  
-        - Jobs with more work from home opportunity would have not taken as much of a hit
+- Jobs with more work from home opportunity would have not taken as much of a hit
 
-	    - Jobs involving travel, retail, restaurants, would have taken more of a hit
+- Jobs involving travel, retail, restaurants, would have taken more of a hit
 
-	    - Delivery services would have increased
+- Delivery services would have increased
 
 * Identify markets with good investment opportunities:
 
-		- State with highest growth in an industry the investor is involved in
+- State with highest growth in an industry the investor is involved in
 
-        - State that took the biggest hit in 2020 in an industry, but is expected to recover
+- State that took the biggest hit in 2020 in an industry, but is expected to recover
 
 ---
 
