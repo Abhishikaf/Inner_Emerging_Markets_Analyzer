@@ -7,7 +7,7 @@ We are defining Emerging Markets to refer to US states which have lower than ave
 
 The first step of the analysis will attempt to narrow down a shorter list of US states to focus the analysis on, and uses a combination of data of current personal income and growth of personal income in the last five years. The next step analyzes some sectors of these states to find which have been growing in recent years and have a good potential for continued growth.
 The data sources used include bea.gov, census.gov, and kaggle.com. Some sectors we are interested in analyzing include tech, healthcare, finance, agriculture, manufacturing, transportation. The sectors that appear to have higher rates of recent growth in the states targetted for analysis will be highlighted.
-]
+
 The data is intended to be used to help investors identify markets to start companies in or expand existing operations into. The end result will be a presentation where investors can look at this data in an easy to use visual format, with a tool where they can pick an industry and see a display of the past five years of activity in that industry in each of the target states, and a ranking of those states in terms of their recent five year growth for that industry.
 
 ---
@@ -96,7 +96,7 @@ We identified 6 fast interesting sectors to test our hypotheses and identify sta
 * Finance
 * Transportation<br>
 
-![Sector Analysis](images/streamlit_9.png
+![Sector Analysis](images/streamlit_9.png)
 
 A dropdown select box where the user can select any industry they want get a gdp per capita analysis of that sector for the last five years in the target states, along with the growth rank of the target states for that sector based on the percent growth for the five year period. Our data set had missing values for some sectors for the year 2020, so the program was modified to filter out year 2020 if no data was available, to avoid the resulting skew. 
 
@@ -156,7 +156,9 @@ Confirm installation by running:
 
 Please acquire an API key from BEA.gov. It can be acquired here:
 [Bureau of Economic Analysis API Key signup](https://apps.bea.gov/api/signup/index.cfm)
+
 You will need to create a text file in the program folder labeled `.env` and containing your API key in the following format:
+
 ```BEA_API_KEY = "YOUR-API-KEY-HERE"```
 
 
@@ -176,7 +178,9 @@ Additionally, we have included a jupyter lab file which was used in development.
 ## Contributors
 
 Preston Hodsman (phodsman@yahoo.com)
+
 Thomas Leahy (thomasleahy6@gmail.com)
+
 Abhishika Fatehpuria (abhishika@gmail.com)
 
 
