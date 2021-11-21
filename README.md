@@ -149,7 +149,7 @@ This project uses python 3.7 along with the following packages:
 
 * [streamlit](https://streamlit.io/) - The fastest way to build and share data apps
 
-*[plotly](https://plotly.com/) -  Developing standardds for AI and data science apps
+* [plotly](https://plotly.com/) -  Developing standardds for AI and data science apps
 ---
 
 ## Installation Guide
