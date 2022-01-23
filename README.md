@@ -1,4 +1,4 @@
-# Identifying Emerging Markets in United Staes
+# Identifying Emerging Markets in United States
 
 ## Project Proposal: Inner Emerging Economies Analysis
 
