@@ -13,12 +13,12 @@ The data is intended to be used to help investors identify markets to start comp
 ---
 ## Data Sources:
 
-We used the United Staes Bureau of Economic Analysis API to get the last 5 year data of Personal Income in all the states. 
+We used the United States Bureau of Economic Analysis API to get the last 5 year data of Personal Income in all the states. 
 
 * [Bea.gov]( https://apps.bea.gov/API/signup/index.cfm) - Bureau of Economic Analysis
 
 Furthermore, the population data to calculate the per capita growth in the states was obtained by donwloading a .csv file from the United States Cencus Bureau at:
-* [Census.gov](https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/state/totals/) - United Staes Census Bureau
+* [Census.gov](https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/state/totals/) - United States Census Bureau
 
 Lastly, the GDP for each industry in all the states in the US was obtained by downloading a .csv file from Kaggle.com:
 * [Kaggle.com](https://www.kaggle.com/davidbroberts/us-gdp-by-state-19972020/version/1) - A huge repository of community published data & code.
